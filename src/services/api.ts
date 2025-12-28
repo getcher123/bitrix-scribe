@@ -55,6 +55,14 @@ class ApiService {
       if (error instanceof Error && error.name === 'AbortError') {
         throw new Error('Request timeout');
       }
+
+      // Browser fetch commonly throws TypeError("Failed to fetch") for CORS/DNS/TLS issues.
+      if (error instanceof TypeError) {
+        throw new Error(
+          `Network error (Failed to fetch). Check that API is reachable and allows CORS for this site. Base URL: ${this.baseUrl}`
+        );
+      }
+
       throw error;
     }
   }
