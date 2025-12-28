@@ -54,6 +54,28 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
   const [copied, setCopied] = React.useState(false);
   const [copiedLinks, setCopiedLinks] = React.useState(false);
 
+  // Normalize sources - API might return different formats
+  const normalizedSources = useMemo(() => {
+    if (!answer.sources || !Array.isArray(answer.sources)) return [];
+    
+    return answer.sources.map((source, idx) => {
+      // Handle string sources
+      if (typeof source === 'string') {
+        return { title: `Источник ${idx + 1}`, path: source, snippet: '' };
+      }
+      // Handle object sources with various field names
+      const s = source as unknown as Record<string, unknown>;
+      return {
+        title: String(s.title || s.name || s.doc_title || `Источник ${idx + 1}`),
+        path: String(s.path || s.url || s.source || s.file || ''),
+        snippet: String(s.snippet || s.text || s.content || s.excerpt || ''),
+        relevance: typeof s.relevance === 'number' ? s.relevance : typeof s.score === 'number' ? s.score : undefined,
+      };
+    });
+  }, [answer.sources]);
+
+  console.log('AnswerDisplay sources:', answer.sources, '→ normalized:', normalizedSources);
+
   const renderedAnswer = useMemo(() => parseMarkdown(answer.answer), [answer.answer]);
 
   const copyAnswer = async () => {
@@ -64,7 +86,7 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
   };
 
   const copyLinks = async () => {
-    const links = answer.sources.map(s => s.path).join('\n');
+    const links = normalizedSources.map(s => s.path).filter(Boolean).join('\n');
     await navigator.clipboard.writeText(links);
     setCopiedLinks(true);
     toast({ title: 'Ссылки скопированы', duration: 2000 });
@@ -127,12 +149,12 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
       </div>
 
       {/* Sources */}
-      {answer.sources.length > 0 && (
+      {normalizedSources.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="font-display font-semibold text-foreground flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Источники ({answer.sources.length})
+              Источники ({normalizedSources.length})
             </h4>
             <Button variant="ghost" size="sm" onClick={copyLinks} className="text-xs">
               {copiedLinks ? <Check className="w-3 h-3 mr-1 text-success" /> : <Copy className="w-3 h-3 mr-1" />}
@@ -141,7 +163,7 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
           </div>
 
           <div className="grid gap-2">
-            {answer.sources.map((source, index) => (
+            {normalizedSources.map((source, index) => (
               <SourceCard key={index} source={source} index={index} />
             ))}
           </div>
