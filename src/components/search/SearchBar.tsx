@@ -16,8 +16,8 @@ interface SearchBarProps {
 }
 
 const modes: { value: SearchMode; label: string; icon: React.ElementType; description: string }[] = [
-  { value: 'fast', label: 'Быстро', icon: Zap, description: 'Extractive' },
   { value: 'full', label: 'Полный', icon: Brain, description: 'LLM' },
+  { value: 'fast', label: 'Быстро', icon: Zap, description: 'Extractive' },
   { value: 'search', label: 'Поиск', icon: FileSearch, description: 'Только документы' },
 ];
 
