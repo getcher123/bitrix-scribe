@@ -19,7 +19,7 @@ type Action =
   | { type: 'SET_ERROR'; payload: string | null };
 
 const defaultSettings: AppSettings = {
-  apiBaseUrl: 'http://localhost:8000',
+  apiBaseUrl: 'https://1c69a9c61a79.ngrok-free.app',
   timeout: 30000,
   fastMode: true,
   showTimings: true,
