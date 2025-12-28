@@ -20,7 +20,7 @@ interface UseSearchReturn {
 export function useSearch(): UseSearchReturn {
   const { settings, addToHistory, setError: setGlobalError } = useApp();
   const [query, setQuery] = useState('');
-  const [mode, setMode] = useState<SearchMode>('fast');
+  const [mode, setMode] = useState<SearchMode>('full');
   const [isSearching, setIsSearching] = useState(false);
   const [answer, setAnswer] = useState<AnswerResponse | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
