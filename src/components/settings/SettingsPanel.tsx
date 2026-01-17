@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Globe, Clock, Zap, Timer, Bug, Save } from 'lucide-react';
+import { Settings, Globe, Clock, Zap, Timer, Bug, Save, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
@@ -82,6 +82,27 @@ export function SettingsPanel() {
               className="font-mono text-sm"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Source Links Settings */}
+      <div className="space-y-4">
+        <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <Link className="w-4 h-4" />
+          Ссылки на источники
+        </h4>
+
+        <div className="space-y-2">
+          <label className="text-sm text-foreground">Префикс URL для ссылок</label>
+          <Input
+            value={localSettings.sourceUrlPrefix}
+            onChange={(e) => handleChange('sourceUrlPrefix', e.target.value)}
+            placeholder="https://github.com/user/repo/blob/main/"
+            className="font-mono text-sm"
+          />
+          <p className="text-xs text-muted-foreground">
+            Добавляется перед путём к файлу при открытии ссылки
+          </p>
         </div>
       </div>
 
