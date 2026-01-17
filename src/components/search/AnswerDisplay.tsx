@@ -12,7 +12,7 @@ interface AnswerDisplayProps {
 }
 
 // Simple markdown parser for basic formatting
-function parseMarkdown(text: string): string {
+function parseMarkdown(text: string, urlPrefix: string): string {
   // Escape HTML
   let html = text
     .replace(/&/g, '&amp;')
@@ -45,8 +45,12 @@ function parseMarkdown(text: string): string {
   html = `<p>${html}</p>`;
   html = html.replace(/<p><\/p>/g, '');
   
-  // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  // Links - add prefix to relative paths (not starting with http/https)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, linkUrl) => {
+    const isAbsolute = /^https?:\/\//i.test(linkUrl);
+    const finalUrl = isAbsolute ? linkUrl : urlPrefix + linkUrl;
+    return `<a href="${finalUrl}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+  });
 
   return html;
 }
@@ -78,7 +82,7 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
 
   console.log('AnswerDisplay sources:', answer.sources, '→ normalized:', normalizedSources);
 
-  const renderedAnswer = useMemo(() => parseMarkdown(answer.answer), [answer.answer]);
+  const renderedAnswer = useMemo(() => parseMarkdown(answer.answer, settings.sourceUrlPrefix), [answer.answer, settings.sourceUrlPrefix]);
 
   const copyAnswer = async () => {
     await navigator.clipboard.writeText(answer.answer);
