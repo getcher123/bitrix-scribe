@@ -1,31 +1,19 @@
 import React, { KeyboardEvent } from 'react';
-import { Search, Zap, Brain, FileSearch, Loader2 } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { SearchMode } from '@/types/api';
-import { cn } from '@/lib/utils';
 
 interface SearchBarProps {
   query: string;
   onQueryChange: (query: string) => void;
-  mode: SearchMode;
-  onModeChange: (mode: SearchMode) => void;
   onSearch: () => void;
   isLoading: boolean;
   elapsedTime: number;
 }
 
-const modes: { value: SearchMode; label: string; icon: React.ElementType; description: string }[] = [
-  { value: 'full', label: 'Полный', icon: Brain, description: 'LLM' },
-  { value: 'fast', label: 'Быстро', icon: Zap, description: 'Extractive' },
-  { value: 'search', label: 'Поиск', icon: FileSearch, description: 'Только документы' },
-];
-
 export function SearchBar({
   query,
   onQueryChange,
-  mode,
-  onModeChange,
   onSearch,
   isLoading,
   elapsedTime,
@@ -38,25 +26,6 @@ export function SearchBar({
 
   return (
     <div className="w-full space-y-4">
-      {/* Mode selector */}
-      <div className="flex items-center gap-2 justify-center">
-        {modes.map(({ value, label, icon: Icon, description }) => (
-          <button
-            key={value}
-            onClick={() => onModeChange(value)}
-            className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-              mode === value
-                ? 'bg-primary text-primary-foreground shadow-lg glow-primary-soft'
-                : 'bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80'
-            )}
-          >
-            <Icon className="w-4 h-4" />
-            <span>{label}</span>
-            <span className="hidden sm:inline text-xs opacity-60">({description})</span>
-          </button>
-        ))}
-      </div>
 
       {/* Search input */}
       <div className="relative group">

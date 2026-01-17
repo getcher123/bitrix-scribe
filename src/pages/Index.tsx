@@ -8,7 +8,7 @@ import { StatusPanel } from '@/components/status/StatusPanel';
 import { SettingsPanel } from '@/components/settings/SettingsPanel';
 import { useSearch } from '@/hooks/useSearch';
 import { useApp } from '@/contexts/AppContext';
-import type { SearchMode } from '@/types/api';
+// SearchMode removed - only LLM mode is used now
 import { AlertCircle, Sparkles } from 'lucide-react';
 
 type Tab = 'search' | 'status' | 'settings';
@@ -21,20 +21,16 @@ const Index = () => {
   const {
     query,
     setQuery,
-    mode,
-    setMode,
     isSearching,
     answer,
     searchResults,
     elapsedTime,
     error,
     search,
-    clear,
   } = useSearch();
 
-  const handleHistorySelect = (historyQuery: string, historyMode: SearchMode) => {
+  const handleHistorySelect = (historyQuery: string) => {
     setQuery(historyQuery);
-    setMode(historyMode);
   };
 
   return (
@@ -76,8 +72,6 @@ const Index = () => {
             <SearchBar
               query={query}
               onQueryChange={setQuery}
-              mode={mode}
-              onModeChange={setMode}
               onSearch={search}
               isLoading={isSearching}
               elapsedTime={elapsedTime}
