@@ -1,39 +1,16 @@
 import React from 'react';
-import { Clock, RotateCcw, Trash2, Zap, Brain, FileSearch } from 'lucide-react';
+import { Clock, RotateCcw, Trash2, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
-import type { HistoryItem, SearchMode } from '@/types/api';
+import type { HistoryItem } from '@/types/api';
 import { cn } from '@/lib/utils';
 
 interface HistoryPanelProps {
-  onSelect: (query: string, mode: SearchMode) => void;
+  onSelect: (query: string) => void;
 }
-
-const modeIcons: Record<SearchMode, React.ElementType> = {
-  fast: Zap,
-  full: Brain,
-  search: FileSearch,
-};
-
-const modeLabels: Record<SearchMode, string> = {
-  fast: 'Быстро',
-  full: 'Полный',
-  search: 'Поиск',
-};
 
 export function HistoryPanel({ onSelect }: HistoryPanelProps) {
   const { history, clearHistory } = useApp();
-
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-
-    if (diff < 60000) return 'Только что';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} мин назад`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)} ч назад`;
-    return date.toLocaleDateString('ru-RU');
-  };
 
   if (history.length === 0) {
     return (
@@ -63,7 +40,7 @@ export function HistoryPanel({ onSelect }: HistoryPanelProps) {
             key={item.id}
             item={item}
             index={index}
-            onSelect={() => onSelect(item.query, item.mode)}
+            onSelect={() => onSelect(item.query)}
           />
         ))}
       </div>
@@ -80,8 +57,6 @@ function HistoryCard({
   index: number;
   onSelect: () => void;
 }) {
-  const Icon = modeIcons[item.mode];
-
   const formatTime = (timestamp: number) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -104,14 +79,12 @@ function HistoryCard({
       style={{ animationDelay: `${index * 30}ms` }}
     >
       <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 shrink-0">
-        <Icon className="w-4 h-4 text-primary" />
+        <Brain className="w-4 h-4 text-primary" />
       </div>
 
       <div className="flex-1 min-w-0">
         <p className="text-sm text-foreground truncate">{item.query}</p>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs text-muted-foreground">{modeLabels[item.mode]}</span>
-          <span className="text-xs text-muted-foreground">•</span>
           <span className="text-xs text-muted-foreground">{formatTime(item.timestamp)}</span>
         </div>
       </div>
