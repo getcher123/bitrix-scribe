@@ -24,6 +24,7 @@ const defaultSettings: AppSettings = {
   fastMode: true,
   showTimings: true,
   showDebug: false,
+  sourceUrlPrefix: 'https://github.com/getcher123/bitrix-docs-new/blob/main/',
 };
 
 const loadSettings = (): AppSettings => {

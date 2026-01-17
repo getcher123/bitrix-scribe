@@ -76,4 +76,5 @@ export interface AppSettings {
   fastMode: boolean;
   showTimings: boolean;
   showDebug: boolean;
+  sourceUrlPrefix: string;
 }

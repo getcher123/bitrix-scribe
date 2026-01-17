@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import type { AnswerResponse, Source } from '@/types/api';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
+import { useApp } from '@/contexts/AppContext';
 
 interface AnswerDisplayProps {
   answer: AnswerResponse;
@@ -51,6 +52,7 @@ function parseMarkdown(text: string): string {
 }
 
 export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
+  const { settings } = useApp();
   const [copied, setCopied] = React.useState(false);
   const [copiedLinks, setCopiedLinks] = React.useState(false);
 
@@ -164,7 +166,7 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
 
           <div className="grid gap-2">
             {normalizedSources.map((source, index) => (
-              <SourceCard key={index} source={source} index={index} />
+              <SourceCard key={index} source={source} index={index} urlPrefix={settings.sourceUrlPrefix} />
             ))}
           </div>
         </div>
@@ -173,10 +175,14 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
   );
 }
 
-function SourceCard({ source, index }: { source: Source; index: number }) {
+function SourceCard({ source, index, urlPrefix }: { source: Source; index: number; urlPrefix: string }) {
   const handleOpen = () => {
-    // For local paths, we'd open in a new way
-    // For now, we copy the path
+    const fullUrl = urlPrefix + source.path;
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyPath = (e: React.MouseEvent) => {
+    e.stopPropagation();
     navigator.clipboard.writeText(source.path);
     toast({ title: 'Путь скопирован', description: source.path, duration: 2000 });
   };
@@ -184,11 +190,12 @@ function SourceCard({ source, index }: { source: Source; index: number }) {
   return (
     <div
       className={cn(
-        'group flex items-start gap-4 p-4 rounded-lg bg-secondary/50 border border-border',
+        'group flex items-start gap-4 p-4 rounded-lg bg-secondary/50 border border-border cursor-pointer',
         'hover:bg-secondary hover:border-primary/30 transition-all duration-200',
         'animate-fade-up'
       )}
       style={{ animationDelay: `${index * 50}ms` }}
+      onClick={handleOpen}
     >
       <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-mono text-sm shrink-0">
         {index + 1}
@@ -205,8 +212,18 @@ function SourceCard({ source, index }: { source: Source; index: number }) {
       <Button
         variant="ghost"
         size="icon-sm"
-        onClick={handleOpen}
+        onClick={handleCopyPath}
         className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+        title="Копировать путь"
+      >
+        <Copy className="w-4 h-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+        className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+        title="Открыть в GitHub"
       >
         <ExternalLink className="w-4 h-4" />
       </Button>
