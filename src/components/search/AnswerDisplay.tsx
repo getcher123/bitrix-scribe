@@ -9,6 +9,7 @@ import { useApp } from '@/contexts/AppContext';
 interface AnswerDisplayProps {
   answer: AnswerResponse;
   showTimings: boolean;
+  elapsedTime?: number;
 }
 
 // Simple markdown parser for basic formatting
@@ -55,7 +56,7 @@ function parseMarkdown(text: string, urlPrefix: string): string {
   return html;
 }
 
-export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
+export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDisplayProps) {
   const { settings } = useApp();
   const [copied, setCopied] = React.useState(false);
   const [copiedLinks, setCopiedLinks] = React.useState(false);
@@ -132,19 +133,19 @@ export function AnswerDisplay({ answer, showTimings }: AnswerDisplayProps) {
         />
 
         {/* Timings */}
-        {showTimings && answer.timings_ms && (
+        {showTimings && (
           <div className="flex items-center gap-4 px-6 py-3 border-t border-border bg-secondary/30 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>Всего: {answer.timings_ms.total}ms</span>
+              <span>Всего: {answer.timings_ms?.total ?? elapsedTime ?? 0}ms</span>
             </div>
-            {answer.timings_ms.retrieval && (
+            {answer.timings_ms?.retrieval && (
               <div className="flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5" />
                 <span>Поиск: {answer.timings_ms.retrieval}ms</span>
               </div>
             )}
-            {answer.timings_ms.generation && (
+            {answer.timings_ms?.generation && (
               <div className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Генерация: {answer.timings_ms.generation}ms</span>

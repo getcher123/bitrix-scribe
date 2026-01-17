@@ -89,7 +89,7 @@ const Index = () => {
 
             {/* Results */}
             {answer && (
-              <AnswerDisplay answer={answer} showTimings={settings.showTimings} />
+              <AnswerDisplay answer={answer} showTimings={settings.showTimings} elapsedTime={elapsedTime} />
             )}
 
             {searchResults.length > 0 && (
