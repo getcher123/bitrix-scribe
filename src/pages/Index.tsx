@@ -8,8 +8,8 @@ import { StatusPanel } from '@/components/status/StatusPanel';
 import { SettingsPanel } from '@/components/settings/SettingsPanel';
 import { useSearch } from '@/hooks/useSearch';
 import { useApp } from '@/contexts/AppContext';
-// SearchMode removed - only LLM mode is used now
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AlertCircle, Sparkles, ArrowLeft } from 'lucide-react';
 
 type Tab = 'search' | 'status' | 'settings';
 
@@ -27,6 +27,7 @@ const Index = () => {
     elapsedTime,
     error,
     search,
+    clear,
   } = useSearch();
 
   const handleHistorySelect = (historyQuery: string) => {
@@ -35,7 +36,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+      <Header activeTab={activeTab} onTabChange={setActiveTab} onLogoClick={clear} />
 
       <main className="container px-4 md:px-6 py-8">
         {/* Global error banner */}
@@ -88,6 +89,17 @@ const Index = () => {
             )}
 
             {/* Results */}
+            {(answer || searchResults.length > 0) && (
+              <Button
+                variant="ghost"
+                onClick={clear}
+                className="mb-4 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Новый поиск
+              </Button>
+            )}
+
             {answer && (
               <AnswerDisplay answer={answer} showTimings={settings.showTimings} elapsedTime={elapsedTime} />
             )}
