@@ -5,6 +5,7 @@ import type { AnswerResponse, Source } from '@/types/api';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { useApp } from '@/contexts/AppContext';
+import { AnswerRating } from './AnswerRating';
 
 interface AnswerDisplayProps {
   answer: AnswerResponse;
@@ -153,6 +154,9 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
             )}
           </div>
         )}
+
+        {/* Rating */}
+        <AnswerRating answerId={`${Date.now()}`} />
       </div>
 
       {/* Sources */}

@@ -1,73 +1,95 @@
-# Welcome to your Lovable project
+# Bitrix Docs Search
 
-## Project info
+Интеллектуальный поиск по документации Bitrix с AI-генерацией ответов.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Возможности
 
-## How can I edit this code?
+- **Быстрый поиск** — экстрактивный режим для мгновенных ответов
+- **Полный режим** — генерация ответов с помощью LLM
+- **История запросов** — сохранение и повторное использование поисков
+- **Оценка ответов** — рейтинг из 5 звёзд с комментариями
+- **Настраиваемый API** — гибкая настройка эндпоинтов
+- **Источники** — прямые ссылки на документацию с настраиваемым префиксом
 
-There are several ways of editing your application.
+## 🛠 Технологии
 
-**Use Lovable**
+- **React 18** + **TypeScript**
+- **Vite** — быстрая сборка
+- **Tailwind CSS** — стилизация
+- **shadcn/ui** — UI компоненты
+- **TanStack Query** — управление серверным состоянием
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 📦 Установка
 
-Changes made via Lovable will be committed automatically to this repo.
+```bash
+# Клонировать репозиторий
+git clone <repository-url>
 
-**Use your preferred IDE**
+# Установить зависимости
+npm install
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Запустить dev сервер
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## ⚙️ Настройка
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+В панели настроек доступны:
 
-**Use GitHub Codespaces**
+| Параметр | Описание | По умолчанию |
+|----------|----------|--------------|
+| API URL | Базовый адрес API | `http://localhost:8000` |
+| Таймаут | Время ожидания запроса | `30000ms` |
+| Быстрый режим | Экстрактивный вместо LLM | `true` |
+| Показывать тайминги | Время выполнения запроса | `true` |
+| Префикс источников | Префикс для ссылок на источники | GitHub URL |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔗 API Endpoints
 
-## What technologies are used for this project?
+Приложение использует следующие эндпоинты:
 
-This project is built with:
+- `POST /answer` — получение ответа на запрос
+- `POST /search` — поиск по документации
+- `GET /health` — статус сервисов
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📁 Структура проекта
 
-## How can I deploy this project?
+```
+src/
+├── components/
+│   ├── search/        # Компоненты поиска
+│   ├── settings/      # Настройки
+│   ├── status/        # Статус сервисов
+│   └── ui/            # UI компоненты (shadcn)
+├── contexts/          # React контексты
+├── hooks/             # Кастомные хуки
+├── pages/             # Страницы
+├── services/          # API сервисы
+└── types/             # TypeScript типы
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 🎨 Особенности интерфейса
 
-## Can I connect a custom domain to my Lovable project?
+- **Тёмная/светлая тема** — автоматическое определение
+- **Адаптивный дизайн** — работа на мобильных устройствах
+- **Анимации** — плавные переходы и состояния
 
-Yes, you can!
+## 📊 Оценка ответов
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Пользователи могут оценить каждый ответ:
+- Рейтинг от 1 до 5 звёзд
+- Опциональный комментарий для низких оценок
+- Данные сохраняются локально
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🔧 Скрипты
+
+```bash
+npm run dev      # Запуск dev сервера
+npm run build    # Сборка для продакшена
+npm run preview  # Просмотр сборки
+npm run lint     # Проверка кода
+```
+
+## 📄 Лицензия
+
+MIT
