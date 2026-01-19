@@ -2,7 +2,7 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, zoomcamp]
+    branches: main
   workflow_dispatch:
 
 permissions:
@@ -24,15 +24,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install deps
         run: npm ci
 
       - name: Build
         env:
-          VITE_BASE: "/${{ github.event.repository.name }}/"
+          VITE_BASE: '/${{ github.event.repository.name }}/'
         run: npm run build
 
       - name: Upload artifact
