@@ -73,7 +73,11 @@ export function SearchResults({ results, activeFilters, onFilterChange }: Search
       {/* Results list */}
       <div className="grid gap-3">
         {filteredResults.map((result, index) => (
-          <ResultCard key={result.id} result={result} index={index} />
+          <ResultCard
+            key={`${result.path ?? 'result'}-${index}`}
+            result={result}
+            index={index}
+          />
         ))}
       </div>
 
@@ -121,27 +125,17 @@ function ResultCard({ result, index }: { result: SearchResult; index: number }) 
 
           <p className="text-sm text-muted-foreground font-mono truncate mb-2">{result.path}</p>
 
-          {result.content && (
-            <p className="text-sm text-muted-foreground line-clamp-2">{result.content}</p>
+          {result.heading_path && (
+            <p className="text-sm text-muted-foreground line-clamp-2">{result.heading_path}</p>
           )}
 
-          {result.highlights && result.highlights.length > 0 && (
-            <div className="mt-2 space-y-1">
-              {result.highlights.slice(0, 2).map((highlight, i) => (
-                <p
-                  key={i}
-                  className="text-sm text-muted-foreground bg-secondary/50 px-2 py-1 rounded"
-                  dangerouslySetInnerHTML={{ __html: highlight }}
-                />
-              ))}
+          {(result.module || result.section) && (
+            <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+              {result.module && <span className="font-mono">{result.module}</span>}
+              {result.section && <span>·</span>}
+              {result.section && <span>{result.section}</span>}
             </div>
           )}
-
-          <div className="flex items-center gap-4 mt-3">
-            <span className="text-xs text-muted-foreground">
-              Релевантность: <span className="text-primary font-medium">{(result.score * 100).toFixed(1)}%</span>
-            </span>
-          </div>
         </div>
 
         <Button

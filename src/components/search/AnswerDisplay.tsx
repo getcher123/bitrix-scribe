@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Copy, ExternalLink, Clock, Cpu, Database, Sparkles, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { AnswerResponse, Source } from '@/types/api';
+import type { AnswerResponse } from '@/types/api';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { useApp } from '@/contexts/AppContext';
@@ -65,29 +65,22 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
   // Normalize sources - API might return different formats
   const normalizedSources = useMemo(() => {
     if (!answer.sources || !Array.isArray(answer.sources)) return [];
-    
-    return answer.sources.map((source, idx) => {
-      // Handle string sources
-      if (typeof source === 'string') {
-        return { title: `Источник ${idx + 1}`, path: source, snippet: '' };
-      }
-      // Handle object sources with various field names
-      const s = source as unknown as Record<string, unknown>;
-      return {
-        title: String(s.title || s.name || s.doc_title || `Источник ${idx + 1}`),
-        path: String(s.path || s.url || s.source || s.file || ''),
-        snippet: String(s.snippet || s.text || s.content || s.excerpt || ''),
-        relevance: typeof s.relevance === 'number' ? s.relevance : typeof s.score === 'number' ? s.score : undefined,
-      };
-    });
+    return answer.sources
+      .filter(Boolean)
+      .map((path, idx) => ({
+        title: `Источник ${idx + 1}`,
+        path,
+        snippet: '',
+      }));
   }, [answer.sources]);
 
-  console.log('AnswerDisplay sources:', answer.sources, '→ normalized:', normalizedSources);
-
-  const renderedAnswer = useMemo(() => parseMarkdown(answer.answer, settings.sourceUrlPrefix), [answer.answer, settings.sourceUrlPrefix]);
+  const renderedAnswer = useMemo(
+    () => parseMarkdown(answer.answer ?? '', settings.sourceUrlPrefix),
+    [answer.answer, settings.sourceUrlPrefix]
+  );
 
   const copyAnswer = async () => {
-    await navigator.clipboard.writeText(answer.answer);
+    await navigator.clipboard.writeText(answer.answer ?? '');
     setCopied(true);
     toast({ title: 'Ответ скопирован', duration: 2000 });
     setTimeout(() => setCopied(false), 2000);
@@ -101,7 +94,14 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
     setTimeout(() => setCopiedLinks(false), 2000);
   };
 
-  const modeLabel = answer.mode === 'extractive' ? 'Быстрый режим' : answer.mode === 'llm' ? 'Полный режим' : 'Поиск';
+  const modeLabel =
+    answer.mode === 'extractive'
+      ? 'Extractive'
+      : answer.mode === 'llm'
+      ? 'LLM'
+      : answer.mode === 'fallback'
+      ? 'Fallback'
+      : 'Unknown';
   const ModeIcon = answer.mode === 'extractive' ? Cpu : Sparkles;
 
   return (
@@ -138,18 +138,26 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
           <div className="flex items-center gap-4 px-6 py-3 border-t border-border bg-secondary/30 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>Всего: {answer.timings_ms?.total ?? elapsedTime ?? 0}ms</span>
+              <span>
+                Всего: {answer.timings_ms?.total_ms ?? elapsedTime ?? 0}ms
+              </span>
             </div>
-            {answer.timings_ms?.retrieval && (
+            {answer.timings_ms?.search_ms && (
               <div className="flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5" />
-                <span>Поиск: {answer.timings_ms.retrieval}ms</span>
+                <span>Поиск: {answer.timings_ms.search_ms}ms</span>
               </div>
             )}
-            {answer.timings_ms?.generation && (
+            {answer.timings_ms?.llm_ms && (
               <div className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Генерация: {answer.timings_ms.generation}ms</span>
+                <span>LLM: {answer.timings_ms.llm_ms}ms</span>
+              </div>
+            )}
+            {answer.timings_ms?.embed_ms && (
+              <div className="flex items-center gap-1.5">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>Embed: {answer.timings_ms.embed_ms}ms</span>
               </div>
             )}
           </div>
@@ -184,7 +192,15 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
   );
 }
 
-function SourceCard({ source, index, urlPrefix }: { source: Source; index: number; urlPrefix: string }) {
+function SourceCard({
+  source,
+  index,
+  urlPrefix,
+}: {
+  source: { title: string; path: string; snippet?: string };
+  index: number;
+  urlPrefix: string;
+}) {
   const handleOpen = () => {
     const fullUrl = urlPrefix + source.path;
     window.open(fullUrl, '_blank', 'noopener,noreferrer');

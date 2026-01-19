@@ -9,6 +9,8 @@ interface SearchBarProps {
   onSearch: () => void;
   isLoading: boolean;
   elapsedTime: number;
+  mode: 'auto' | 'llm' | 'extractive' | 'search';
+  onModeChange: (mode: 'auto' | 'llm' | 'extractive' | 'search') => void;
 }
 
 export function SearchBar({
@@ -17,6 +19,8 @@ export function SearchBar({
   onSearch,
   isLoading,
   elapsedTime,
+  mode,
+  onModeChange,
 }: SearchBarProps) {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !isLoading) {
@@ -68,6 +72,29 @@ export function SearchBar({
             )}
           </Button>
         </div>
+      </div>
+
+      {/* Mode selector */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        {[
+          { id: 'auto', label: 'Авто' },
+          { id: 'llm', label: 'LLM' },
+          { id: 'extractive', label: 'Extractive' },
+          { id: 'search', label: 'Только поиск' },
+        ].map((option) => (
+          <button
+            key={option.id}
+            onClick={() => onModeChange(option.id as SearchBarProps['mode'])}
+            className={[
+              'px-3 py-1.5 rounded-lg border transition-all',
+              mode === option.id
+                ? 'bg-primary/10 border-primary/40 text-primary'
+                : 'bg-secondary/50 border-border text-muted-foreground hover:text-foreground',
+            ].join(' ')}
+          >
+            {option.label}
+          </button>
+        ))}
       </div>
 
       {/* Timer indicator */}

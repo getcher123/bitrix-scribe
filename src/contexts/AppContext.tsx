@@ -1,27 +1,26 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import type { AppSettings, HistoryItem, SearchMode, HealthStatus } from '@/types/api';
+import type { AppSettings, HistoryItem, HealthResponse, SearchMode } from '@/types/api';
 import { apiService } from '@/services/api';
 
 interface AppState {
   settings: AppSettings;
   history: HistoryItem[];
-  healthStatus: HealthStatus | null;
+  healthStatus: HealthResponse | null;
   isLoading: boolean;
   error: string | null;
 }
 
 type Action =
   | { type: 'SET_SETTINGS'; payload: Partial<AppSettings> }
-  | { type: 'ADD_HISTORY'; payload: HistoryItem }
-  | { type: 'CLEAR_HISTORY' }
-  | { type: 'SET_HEALTH'; payload: HealthStatus | null }
+  | { type: 'SET_HISTORY'; payload: HistoryItem[] }
+  | { type: 'SET_HEALTH'; payload: HealthResponse | null }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null };
 
 const defaultSettings: AppSettings = {
-  apiBaseUrl: 'https://4a170da8e7be.ngrok-free.app',
+  apiBaseUrl: 'https://rag-bitrix-getcher.amvera.io',
   timeout: 30000,
-  fastMode: true,
+  defaultMode: 'auto',
   showTimings: true,
   showDebug: false,
   sourceUrlPrefix: 'https://github.com/getcher123/bitrix-docs-new/blob/main/',
@@ -39,21 +38,9 @@ const loadSettings = (): AppSettings => {
   return defaultSettings;
 };
 
-const loadHistory = (): HistoryItem[] => {
-  try {
-    const stored = localStorage.getItem('bitrix-rag-history');
-    if (stored) {
-      return JSON.parse(stored).slice(0, 10);
-    }
-  } catch (e) {
-    console.error('Failed to load history:', e);
-  }
-  return [];
-};
-
 const initialState: AppState = {
   settings: loadSettings(),
-  history: loadHistory(),
+  history: [],
   healthStatus: null,
   isLoading: false,
   error: null,
@@ -68,14 +55,8 @@ function appReducer(state: AppState, action: Action): AppState {
       apiService.setTimeout(newSettings.timeout);
       return { ...state, settings: newSettings };
 
-    case 'ADD_HISTORY':
-      const newHistory = [action.payload, ...state.history.filter(h => h.id !== action.payload.id)].slice(0, 10);
-      localStorage.setItem('bitrix-rag-history', JSON.stringify(newHistory));
-      return { ...state, history: newHistory };
-
-    case 'CLEAR_HISTORY':
-      localStorage.removeItem('bitrix-rag-history');
-      return { ...state, history: [] };
+    case 'SET_HISTORY':
+      return { ...state, history: action.payload };
 
     case 'SET_HEALTH':
       return { ...state, healthStatus: action.payload };
@@ -93,8 +74,7 @@ function appReducer(state: AppState, action: Action): AppState {
 
 interface AppContextType extends AppState {
   updateSettings: (settings: Partial<AppSettings>) => void;
-  addToHistory: (item: Omit<HistoryItem, 'id' | 'timestamp'>) => void;
-  clearHistory: () => void;
+  refreshHistory: (limit?: number) => Promise<void>;
   checkHealth: () => Promise<void>;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -114,18 +94,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'SET_SETTINGS', payload: settings });
   }, []);
 
-  const addToHistory = useCallback((item: Omit<HistoryItem, 'id' | 'timestamp'>) => {
-    const historyItem: HistoryItem = {
-      ...item,
-      id: crypto.randomUUID(),
-      timestamp: Date.now(),
-    };
-    dispatch({ type: 'ADD_HISTORY', payload: historyItem });
+  const refreshHistory = useCallback(async (limit: number = 20) => {
+    try {
+      const response = await apiService.history(limit);
+      dispatch({ type: 'SET_HISTORY', payload: response.items || [] });
+    } catch (error) {
+      dispatch({ type: 'SET_HISTORY', payload: [] });
+      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : 'History load failed' });
+    }
   }, []);
 
-  const clearHistory = useCallback(() => {
-    dispatch({ type: 'CLEAR_HISTORY' });
-  }, []);
+  useEffect(() => {
+    refreshHistory();
+  }, [refreshHistory]);
 
   const checkHealth = useCallback(async () => {
     try {
@@ -151,8 +132,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       value={{
         ...state,
         updateSettings,
-        addToHistory,
-        clearHistory,
+        refreshHistory,
         checkHealth,
         setLoading,
         setError,

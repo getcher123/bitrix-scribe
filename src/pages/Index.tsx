@@ -6,12 +6,13 @@ import { SearchResults } from '@/components/search/SearchResults';
 import { HistoryPanel } from '@/components/search/HistoryPanel';
 import { StatusPanel } from '@/components/status/StatusPanel';
 import { SettingsPanel } from '@/components/settings/SettingsPanel';
+import { EvalPanel } from '@/components/eval/EvalPanel';
 import { useSearch } from '@/hooks/useSearch';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Sparkles, ArrowLeft } from 'lucide-react';
 
-type Tab = 'search' | 'status' | 'settings';
+type Tab = 'search' | 'status' | 'eval' | 'settings';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<Tab>('search');
@@ -21,6 +22,8 @@ const Index = () => {
   const {
     query,
     setQuery,
+    mode,
+    setMode,
     isSearching,
     answer,
     searchResults,
@@ -76,6 +79,8 @@ const Index = () => {
               onSearch={search}
               isLoading={isSearching}
               elapsedTime={elapsedTime}
+              mode={mode}
+              onModeChange={setMode}
             />
 
             {/* Error display */}
@@ -124,6 +129,12 @@ const Index = () => {
         {activeTab === 'status' && (
           <div className="max-w-2xl mx-auto">
             <StatusPanel />
+          </div>
+        )}
+
+        {activeTab === 'eval' && (
+          <div className="max-w-3xl mx-auto">
+            <EvalPanel />
           </div>
         )}
 

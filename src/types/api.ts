@@ -1,79 +1,29 @@
-export interface SearchResult {
-  id: string;
-  title: string;
-  path: string;
-  content: string;
-  score: number;
-  section?: string;
-  highlights?: string[];
-}
+import type { paths } from '@/api/schema';
 
-export interface AnswerResponse {
-  answer: string;
-  sources: Source[];
-  mode: 'extractive' | 'llm' | 'search';
-  timings_ms: TimingsMs;
-}
+export type SearchRequest =
+  paths['/search']['post']['requestBody']['content']['application/json'];
+export type SearchResponse =
+  paths['/search']['post']['responses'][200]['content']['application/json'];
+export type SearchResult = NonNullable<SearchResponse['results']>[number];
 
-export interface Source {
-  title: string;
-  path: string;
-  url?: string;
-  snippet?: string;
-  relevance?: number;
-}
+export type AnswerRequest =
+  paths['/answer']['post']['requestBody']['content']['application/json'];
+export type AnswerResponse =
+  paths['/answer']['post']['responses'][200]['content']['application/json'];
 
-export interface TimingsMs {
-  total: number;
-  retrieval?: number;
-  generation?: number;
-  embedding?: number;
-}
+export type HealthResponse =
+  paths['/health']['get']['responses'][200]['content']['application/json'];
 
-export interface HealthStatus {
-  status: 'healthy' | 'degraded' | 'unhealthy';
-  services: {
-    qdrant: ServiceStatus;
-    bge: ServiceStatus;
-    openai: ServiceStatus;
-  };
-  timestamp: string;
-}
+export type HistoryResponse =
+  paths['/history']['get']['responses'][200]['content']['application/json'];
+export type HistoryItem = NonNullable<HistoryResponse['items']>[number];
 
-export interface ServiceStatus {
-  status: 'ok' | 'error' | 'unknown';
-  latency_ms?: number;
-  message?: string;
-}
-
-export interface SearchRequest {
-  query: string;
-  filters?: {
-    sections?: string[];
-  };
-  limit?: number;
-}
-
-export interface AnswerRequest {
-  query: string;
-  mode?: 'extractive' | 'llm' | 'search';
-}
-
-export type SearchMode = 'fast' | 'full' | 'search';
-
-export interface HistoryItem {
-  id: string;
-  query: string;
-  mode: SearchMode;
-  timestamp: number;
-  answer?: string;
-  sources?: Source[];
-}
+export type SearchMode = 'auto' | 'llm' | 'extractive' | 'search';
 
 export interface AppSettings {
   apiBaseUrl: string;
   timeout: number;
-  fastMode: boolean;
+  defaultMode: SearchMode;
   showTimings: boolean;
   showDebug: boolean;
   sourceUrlPrefix: string;

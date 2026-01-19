@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
-  activeTab: 'search' | 'status' | 'settings';
-  onTabChange: (tab: 'search' | 'status' | 'settings') => void;
+  activeTab: 'search' | 'status' | 'eval' | 'settings';
+  onTabChange: (tab: 'search' | 'status' | 'eval' | 'settings') => void;
   onLogoClick?: () => void;
 }
 
@@ -60,6 +60,18 @@ export function Header({ activeTab, onTabChange, onLogoClick }: HeaderProps) {
           >
             <Activity className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Статус</span>
+          </Button>
+
+          <Button
+            variant={activeTab === 'eval' ? 'secondary' : 'ghost'}
+            size="sm"
+            onClick={() => onTabChange('eval')}
+            className={cn(
+              activeTab === 'eval' && 'bg-secondary'
+            )}
+          >
+            <Activity className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Eval</span>
           </Button>
 
           <Button

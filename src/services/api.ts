@@ -1,9 +1,10 @@
 import type {
   AnswerRequest,
   AnswerResponse,
-  HealthStatus,
+  HealthResponse,
+  HistoryResponse,
   SearchRequest,
-  SearchResult,
+  SearchResponse,
 } from '@/types/api';
 
 const DEFAULT_TIMEOUT = 30000;
@@ -67,12 +68,12 @@ class ApiService {
     }
   }
 
-  async health(): Promise<HealthStatus> {
-    return this.fetchWithTimeout<HealthStatus>('/health');
+  async health(): Promise<HealthResponse> {
+    return this.fetchWithTimeout<HealthResponse>('/health');
   }
 
-  async search(request: SearchRequest): Promise<SearchResult[]> {
-    return this.fetchWithTimeout<SearchResult[]>('/search', {
+  async search(request: SearchRequest): Promise<SearchResponse> {
+    return this.fetchWithTimeout<SearchResponse>('/search', {
       method: 'POST',
       body: JSON.stringify(request),
     });
@@ -83,6 +84,11 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify(request),
     });
+  }
+
+  async history(limit: number = 20): Promise<HistoryResponse> {
+    const params = new URLSearchParams({ limit: String(limit) });
+    return this.fetchWithTimeout<HistoryResponse>(`/history?${params.toString()}`);
   }
 
   async getOpenApiSpec(): Promise<object> {

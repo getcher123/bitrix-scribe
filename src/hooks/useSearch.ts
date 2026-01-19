@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { apiService } from '@/services/api';
 import { useApp } from '@/contexts/AppContext';
-import type { AnswerResponse, SearchResult, SearchMode, Source } from '@/types/api';
+import type { AnswerResponse, SearchResult, SearchMode } from '@/types/api';
 
 interface UseSearchReturn {
   query: string;
@@ -18,14 +18,18 @@ interface UseSearchReturn {
 }
 
 export function useSearch(): UseSearchReturn {
-  const { settings, addToHistory, setError: setGlobalError } = useApp();
+  const { settings, refreshHistory, setError: setGlobalError } = useApp();
   const [query, setQuery] = useState('');
-  const [mode, setMode] = useState<SearchMode>('full');
+  const [mode, setMode] = useState<SearchMode>(settings.defaultMode);
   const [isSearching, setIsSearching] = useState(false);
   const [answer, setAnswer] = useState<AnswerResponse | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMode(settings.defaultMode);
+  }, [settings.defaultMode]);
 
   const search = useCallback(async () => {
     if (!query.trim()) return;
@@ -45,20 +49,13 @@ export function useSearch(): UseSearchReturn {
 
     try {
       if (mode === 'search') {
-        const results = await apiService.search({ query });
-        setSearchResults(results);
-        addToHistory({ query, mode });
+        const response = await apiService.search({ query });
+        setSearchResults(response.results || []);
       } else {
-        const apiMode = mode === 'fast' ? 'extractive' : 'llm';
-        const response = await apiService.answer({ query, mode: apiMode });
+        const response = await apiService.answer({ query, mode });
         setAnswer(response);
-        addToHistory({
-          query,
-          mode,
-          answer: response.answer,
-          sources: response.sources,
-        });
       }
+      await refreshHistory();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Search failed';
       setError(errorMessage);
@@ -68,7 +65,7 @@ export function useSearch(): UseSearchReturn {
       setElapsedTime(Math.floor(performance.now() - startTime));
       setIsSearching(false);
     }
-  }, [query, mode, addToHistory, setGlobalError]);
+  }, [query, mode, refreshHistory, setGlobalError]);
 
   const clear = useCallback(() => {
     setQuery('');

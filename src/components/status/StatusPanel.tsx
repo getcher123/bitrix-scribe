@@ -1,15 +1,8 @@
 import React, { useEffect } from 'react';
-import { RefreshCw, CheckCircle, XCircle, AlertCircle, Server, Database, Cpu, Cloud } from 'lucide-react';
+import { RefreshCw, CheckCircle, XCircle, AlertCircle, Server, Database, Cpu, Cloud, Folder } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
-import type { ServiceStatus } from '@/types/api';
 import { cn } from '@/lib/utils';
-
-const serviceInfo = {
-  qdrant: { label: 'Qdrant', icon: Database, description: 'Векторная база данных' },
-  bge: { label: 'BGE', icon: Cpu, description: 'Embedding модель' },
-  openai: { label: 'OpenAI', icon: Cloud, description: 'LLM для генерации' },
-};
 
 export function StatusPanel() {
   const { healthStatus, checkHealth, error } = useApp();
@@ -76,22 +69,20 @@ export function StatusPanel() {
       {/* Overall status */}
       <div className={cn(
         'flex items-center gap-4 p-4 rounded-xl border',
-        overallStatus === 'healthy' ? 'bg-success/10 border-success/30' :
+        overallStatus === 'ok' || overallStatus === 'healthy' ? 'bg-success/10 border-success/30' :
         overallStatus === 'degraded' ? 'bg-warning/10 border-warning/30' :
         'bg-destructive/10 border-destructive/30'
       )}>
         <StatusIcon className={cn('w-8 h-8', getStatusColor(overallStatus))} />
         <div>
           <p className={cn('font-medium', getStatusColor(overallStatus))}>
-            {overallStatus === 'healthy' ? 'Все сервисы работают' :
+            {overallStatus === 'ok' || overallStatus === 'healthy' ? 'Сервис работает' :
              overallStatus === 'degraded' ? 'Частичная деградация' :
              'Сервис недоступен'}
           </p>
-          {healthStatus?.timestamp && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Последняя проверка: {new Date(healthStatus.timestamp).toLocaleTimeString('ru-RU')}
-            </p>
-          )}
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Обновляется каждые 30 секунд
+          </p>
         </div>
       </div>
 
@@ -108,18 +99,45 @@ export function StatusPanel() {
         </div>
       )}
 
-      {/* Services */}
-      {healthStatus?.services && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-muted-foreground">Сервисы</h4>
+      {healthStatus && (
+        <div className="space-y-4">
+          <h4 className="text-sm font-medium text-muted-foreground">Компоненты</h4>
           <div className="grid gap-3">
-            {Object.entries(healthStatus.services).map(([key, service]) => (
-              <ServiceCard
-                key={key}
-                serviceKey={key as keyof typeof serviceInfo}
-                service={service}
-              />
-            ))}
+            <InfoCard
+              icon={Database}
+              title="База данных"
+              lines={[
+                `OK: ${healthStatus.database?.ok ? 'да' : 'нет'}`,
+                `Dialect: ${healthStatus.database?.dialect ?? '—'}`,
+                `pgvector: ${healthStatus.database?.pgvector === null ? '—' : healthStatus.database?.pgvector ? 'да' : 'нет'}`,
+                healthStatus.database?.error ? `Ошибка: ${healthStatus.database.error}` : '',
+              ]}
+            />
+            <InfoCard
+              icon={Folder}
+              title="Индексы"
+              lines={[
+                `chunks: ${healthStatus.indexes_present?.chunks ? 'да' : 'нет'}`,
+                `bm25: ${healthStatus.indexes_present?.bm25 ? 'да' : 'нет'}`,
+              ]}
+            />
+            <InfoCard
+              icon={Cpu}
+              title="Векторный поиск"
+              lines={[
+                `backend: ${healthStatus.vector_backend ?? '—'}`,
+                `qdrant: ${healthStatus.qdrant_url ?? '—'}`,
+                `collection: ${healthStatus.qdrant_collection ?? '—'}`,
+              ]}
+            />
+            <InfoCard
+              icon={Cloud}
+              title="LLM/Embeddings"
+              lines={[
+                `openai_model: ${healthStatus.openai_model ?? '—'}`,
+                `bge_base_url_set: ${healthStatus.bge_base_url_set ? 'да' : 'нет'}`,
+              ]}
+            />
           </div>
         </div>
       )}
@@ -127,43 +145,30 @@ export function StatusPanel() {
   );
 }
 
-function ServiceCard({
-  serviceKey,
-  service,
+function InfoCard({
+  icon: Icon,
+  title,
+  lines,
 }: {
-  serviceKey: keyof typeof serviceInfo;
-  service: ServiceStatus;
+  icon: React.ElementType;
+  title: string;
+  lines: string[];
 }) {
-  const info = serviceInfo[serviceKey];
-  const StatusIcon = service.status === 'ok' ? CheckCircle :
-                     service.status === 'error' ? XCircle : AlertCircle;
-
-  const statusColor = service.status === 'ok' ? 'text-success' :
-                      service.status === 'error' ? 'text-destructive' : 'text-warning';
-
   return (
     <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50 border border-border">
       <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary">
-        <info.icon className="w-5 h-5 text-muted-foreground" />
+        <Icon className="w-5 h-5 text-muted-foreground" />
       </div>
 
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-foreground">{info.label}</span>
-          <StatusIcon className={cn('w-4 h-4', statusColor)} />
+          <span className="font-medium text-foreground">{title}</span>
         </div>
-        <p className="text-xs text-muted-foreground">{info.description}</p>
-      </div>
-
-      <div className="text-right">
-        {service.latency_ms !== undefined && (
-          <p className="text-sm font-mono text-muted-foreground">{service.latency_ms}ms</p>
-        )}
-        {service.message && (
-          <p className="text-xs text-muted-foreground mt-0.5 max-w-[150px] truncate">
-            {service.message}
-          </p>
-        )}
+        <div className="text-xs text-muted-foreground space-y-0.5 mt-1">
+          {lines.filter(Boolean).map((line, idx) => (
+            <div key={idx}>{line}</div>
+          ))}
+        </div>
       </div>
     </div>
   );

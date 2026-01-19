@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, RotateCcw, Trash2, Brain } from 'lucide-react';
+import { Clock, RotateCcw, Brain, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import type { HistoryItem } from '@/types/api';
@@ -10,7 +10,7 @@ interface HistoryPanelProps {
 }
 
 export function HistoryPanel({ onSelect }: HistoryPanelProps) {
-  const { history, clearHistory } = useApp();
+  const { history, refreshHistory } = useApp();
 
   if (history.length === 0) {
     return (
@@ -28,9 +28,9 @@ export function HistoryPanel({ onSelect }: HistoryPanelProps) {
           <Clock className="w-4 h-4 text-primary" />
           История запросов
         </h3>
-        <Button variant="ghost" size="sm" onClick={clearHistory} className="text-xs text-muted-foreground">
-          <Trash2 className="w-3 h-3 mr-1" />
-          Очистить
+        <Button variant="ghost" size="sm" onClick={() => refreshHistory()} className="text-xs text-muted-foreground">
+          <RefreshCw className="w-3 h-3 mr-1" />
+          Обновить
         </Button>
       </div>
 
@@ -40,7 +40,7 @@ export function HistoryPanel({ onSelect }: HistoryPanelProps) {
             key={item.id}
             item={item}
             index={index}
-            onSelect={() => onSelect(item.query)}
+            onSelect={() => onSelect(item.query || '')}
           />
         ))}
       </div>
@@ -83,9 +83,11 @@ function HistoryCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-foreground truncate">{item.query}</p>
+        <p className="text-sm text-foreground truncate">{item.query || '—'}</p>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs text-muted-foreground">{formatTime(item.timestamp)}</span>
+          <span className="text-xs text-muted-foreground">
+            {item.created_at ? formatTime(Date.parse(item.created_at)) : '—'}
+          </span>
         </div>
       </div>
 

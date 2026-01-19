@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Globe, Clock, Zap, Timer, Bug, Save, Link } from 'lucide-react';
+import { Settings, Globe, Clock, Timer, Bug, Save, Link, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
@@ -114,13 +114,22 @@ export function SettingsPanel() {
         </h4>
 
         <div className="space-y-3">
-          <ToggleOption
-            icon={Zap}
-            label="Быстрый режим по умолчанию"
-            description="Использовать extractive режим"
-            checked={localSettings.fastMode}
-            onChange={(checked) => handleChange('fastMode', checked)}
-          />
+          <div className="space-y-2">
+            <label className="text-sm text-foreground flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              Режим по умолчанию
+            </label>
+            <select
+              value={localSettings.defaultMode}
+              onChange={(e) => handleChange('defaultMode', e.target.value as typeof localSettings.defaultMode)}
+              className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="auto">Auto</option>
+              <option value="llm">LLM</option>
+              <option value="extractive">Extractive</option>
+              <option value="search">Только поиск</option>
+            </select>
+          </div>
 
           <ToggleOption
             icon={Clock}
