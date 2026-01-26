@@ -41,9 +41,7 @@ export function useSearch(): UseSearchReturn {
     setSearchResults([]);
 
     const startTime = performance.now();
-    let interval: NodeJS.Timeout;
-
-    interval = setInterval(() => {
+    const interval = setInterval(() => {
       setElapsedTime(Math.floor(performance.now() - startTime));
     }, 100);
 

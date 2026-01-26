@@ -48,12 +48,13 @@ const initialState: AppState = {
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
-    case 'SET_SETTINGS':
+    case 'SET_SETTINGS': {
       const newSettings = { ...state.settings, ...action.payload };
       localStorage.setItem('bitrix-rag-settings', JSON.stringify(newSettings));
       apiService.setBaseUrl(newSettings.apiBaseUrl);
       apiService.setTimeout(newSettings.timeout);
       return { ...state, settings: newSettings };
+    }
 
     case 'SET_HISTORY':
       return { ...state, history: action.payload };
