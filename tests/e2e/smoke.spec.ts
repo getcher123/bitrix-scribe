@@ -22,7 +22,7 @@ test('ask -> answer -> sources', async ({ page }) => {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        answer: 'Ответ с ссылкой на [документ](docs/test.md).',
+        answer: 'Answer with a link to the [document](docs/test.md).',
         sources: ['docs/test.md'],
         mode: 'llm',
         timings_ms: { total_ms: 123 },
@@ -32,9 +32,9 @@ test('ask -> answer -> sources', async ({ page }) => {
 
   await page.goto('/');
 
-  await page.getByPlaceholder('Задайте вопрос по Bitrix документации...').fill('Как получить список элементов?');
-  await page.getByRole('button', { name: 'Ответить' }).click();
+  await page.getByPlaceholder('Ask a question about Bitrix documentation...').fill('How to get the list of elements?');
+  await page.getByRole('button', { name: 'Answer' }).click();
 
-  await expect(page.getByText('Ответ с ссылкой', { exact: false })).toBeVisible();
-  await expect(page.getByText('Источники (1)')).toBeVisible();
+  await expect(page.getByText('Answer with a link', { exact: false })).toBeVisible();
+  await expect(page.getByText('Sources (1)')).toBeVisible();
 });

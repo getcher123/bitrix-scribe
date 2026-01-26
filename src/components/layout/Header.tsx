@@ -31,7 +31,7 @@ export function Header({ activeTab, onTabChange, onLogoClick }: HeaderProps) {
               Bitrix<span className="text-primary">RAG</span>
             </h1>
             <p className="text-xs text-muted-foreground hidden sm:block">
-              Документация с AI
+              Docs with AI
             </p>
           </div>
         </button>
@@ -47,7 +47,7 @@ export function Header({ activeTab, onTabChange, onLogoClick }: HeaderProps) {
             )}
           >
             <BookOpen className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Поиск</span>
+            <span className="hidden sm:inline">Search</span>
           </Button>
 
           <Button
@@ -59,7 +59,7 @@ export function Header({ activeTab, onTabChange, onLogoClick }: HeaderProps) {
             )}
           >
             <Activity className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Статус</span>
+            <span className="hidden sm:inline">Status</span>
           </Button>
 
           <Button
@@ -83,7 +83,7 @@ export function Header({ activeTab, onTabChange, onLogoClick }: HeaderProps) {
             )}
           >
             <Settings className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Настройки</span>
+            <span className="hidden sm:inline">Settings</span>
           </Button>
         </nav>
       </div>

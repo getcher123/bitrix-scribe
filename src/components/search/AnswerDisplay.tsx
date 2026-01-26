@@ -68,7 +68,7 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
     return answer.sources
       .filter(Boolean)
       .map((path, idx) => ({
-        title: `Источник ${idx + 1}`,
+        title: `Source ${idx + 1}`,
         path,
         snippet: '',
       }));
@@ -82,7 +82,7 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
   const copyAnswer = async () => {
     await navigator.clipboard.writeText(answer.answer ?? '');
     setCopied(true);
-    toast({ title: 'Ответ скопирован', duration: 2000 });
+    toast({ title: 'Answer copied', duration: 2000 });
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -90,7 +90,7 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
     const links = normalizedSources.map(s => s.path).filter(Boolean).join('\n');
     await navigator.clipboard.writeText(links);
     setCopiedLinks(true);
-    toast({ title: 'Ссылки скопированы', duration: 2000 });
+    toast({ title: 'Links copied', duration: 2000 });
     setTimeout(() => setCopiedLinks(false), 2000);
   };
 
@@ -115,7 +115,7 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
               <ModeIcon className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <h3 className="font-display font-semibold text-foreground">Ответ</h3>
+              <h3 className="font-display font-semibold text-foreground">Answer</h3>
               <p className="text-xs text-muted-foreground">{modeLabel}</p>
             </div>
           </div>
@@ -139,13 +139,13 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
               <span>
-                Всего: {answer.timings_ms?.total_ms ?? elapsedTime ?? 0}ms
+                Total: {answer.timings_ms?.total_ms ?? elapsedTime ?? 0}ms
               </span>
             </div>
             {answer.timings_ms?.search_ms && (
               <div className="flex items-center gap-1.5">
                 <Database className="w-3.5 h-3.5" />
-                <span>Поиск: {answer.timings_ms.search_ms}ms</span>
+                <span>Search: {answer.timings_ms.search_ms}ms</span>
               </div>
             )}
             {answer.timings_ms?.llm_ms && (
@@ -173,11 +173,11 @@ export function AnswerDisplay({ answer, showTimings, elapsedTime }: AnswerDispla
           <div className="flex items-center justify-between">
             <h4 className="font-display font-semibold text-foreground flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Источники ({normalizedSources.length})
+              Sources ({normalizedSources.length})
             </h4>
             <Button variant="ghost" size="sm" onClick={copyLinks} className="text-xs">
               {copiedLinks ? <Check className="w-3 h-3 mr-1 text-success" /> : <Copy className="w-3 h-3 mr-1" />}
-              Копировать ссылки
+              Copy links
             </Button>
           </div>
 
@@ -209,7 +209,7 @@ function SourceCard({
   const handleCopyPath = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(source.path);
-    toast({ title: 'Путь скопирован', description: source.path, duration: 2000 });
+    toast({ title: 'Path copied', description: source.path, duration: 2000 });
   };
 
   return (
@@ -239,7 +239,7 @@ function SourceCard({
         size="icon-sm"
         onClick={handleCopyPath}
         className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-        title="Копировать путь"
+        title="Copy path"
       >
         <Copy className="w-4 h-4" />
       </Button>
@@ -248,7 +248,7 @@ function SourceCard({
         size="icon-sm"
         onClick={(e) => { e.stopPropagation(); handleOpen(); }}
         className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-        title="Открыть в GitHub"
+        title="Open on GitHub"
       >
         <ExternalLink className="w-4 h-4" />
       </Button>

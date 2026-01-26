@@ -17,11 +17,11 @@ type EvalRow = {
 };
 
 const DEFAULT_CASES = [
-  { id: 'q1', query: 'Как получить список элементов инфоблока через CIBlockElement::GetList' },
-  { id: 'q2', query: 'Как создать пользователя?' },
-  { id: 'q3', query: 'Где настраиваются смарт‑процессы?' },
-  { id: 'q4', query: 'Как выполнить первый запрос к REST API?' },
-  { id: 'q5', query: 'Как включить модуль iblock?' },
+  { id: 'q1', query: 'How to get the list of iblock elements via CIBlockElement::GetList' },
+  { id: 'q2', query: 'How to create a user?' },
+  { id: 'q3', query: 'Where are smart processes configured?' },
+  { id: 'q4', query: 'How to make the first REST API request?' },
+  { id: 'q5', query: 'How to enable the iblock module?' },
 ];
 
 export function EvalPanel() {
@@ -70,7 +70,7 @@ export function EvalPanel() {
                   ...r,
                   status: 'error',
                   ms,
-                  error: error instanceof Error ? error.message : 'Ошибка',
+                  error: error instanceof Error ? error.message : 'Error',
                 }
               : r
           )
@@ -87,17 +87,17 @@ export function EvalPanel() {
         <div>
           <h3 className="font-display font-semibold text-foreground">Eval / Smoke</h3>
           <p className="text-sm text-muted-foreground">
-            Прогон набора вопросов и базовых метрик ответа.
+            Run a predefined question set and basic answer metrics.
           </p>
         </div>
         <Button onClick={run} disabled={isRunning}>
           <Play className="w-4 h-4 mr-2" />
-          {isRunning ? 'В процессе…' : 'Запустить'}
+          {isRunning ? 'Running...' : 'Run'}
         </Button>
       </div>
 
       <div className="flex items-center gap-3 text-sm">
-        <label className="text-muted-foreground">Режим:</label>
+        <label className="text-muted-foreground">Mode:</label>
         <select
           value={mode}
           onChange={(e) => setMode(e.target.value as AnswerRequest['mode'])}

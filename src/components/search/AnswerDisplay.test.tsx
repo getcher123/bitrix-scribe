@@ -18,7 +18,7 @@ vi.mock('./AnswerRating', () => ({
 describe('AnswerDisplay', () => {
   it('renders markdown links with prefix', () => {
     const answer = {
-      answer: 'См. [документ](docs/test.md)',
+      answer: 'See [document](docs/test.md)',
       sources: ['docs/test.md'],
       mode: 'llm',
       timings_ms: {},
@@ -26,8 +26,8 @@ describe('AnswerDisplay', () => {
 
     render(<AnswerDisplay answer={answer} showTimings={false} />);
 
-    const link = screen.getByRole('link', { name: /документ/i });
+    const link = screen.getByRole('link', { name: /document/i });
     expect(link).toHaveAttribute('href', 'https://example.com/docs/test.md');
-    expect(screen.getByText('Источники (1)')).toBeInTheDocument();
+    expect(screen.getByText('Sources (1)')).toBeInTheDocument();
   });
 });

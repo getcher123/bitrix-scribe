@@ -26,7 +26,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
 
   const handleSubmit = () => {
     if (rating === 0) {
-      toast({ title: 'Выберите оценку', variant: 'destructive' });
+      toast({ title: 'Select a rating', variant: 'destructive' });
       return;
     }
 
@@ -42,7 +42,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
 
     onSubmit?.(rating, comment);
     setSubmitted(true);
-    toast({ title: 'Спасибо за оценку!', duration: 2000 });
+    toast({ title: 'Thanks for the rating!', duration: 2000 });
   };
 
   if (submitted) {
@@ -50,7 +50,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
       <div className="flex items-center gap-2 px-6 py-4 border-t border-border bg-secondary/30">
         <Check className="w-4 h-4 text-success" />
         <span className="text-sm text-muted-foreground">
-          Спасибо за вашу оценку! ({rating}/5 звёзд)
+          Thanks for your rating! ({rating}/5 stars)
         </span>
       </div>
     );
@@ -60,7 +60,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
     <div className="px-6 py-4 border-t border-border bg-secondary/30 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Оцените ответ:</span>
+          <span className="text-sm text-muted-foreground">Rate the answer:</span>
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((value) => (
               <button
@@ -83,11 +83,11 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
           </div>
           {rating > 0 && (
             <span className="text-xs text-muted-foreground ml-2">
-              {rating === 1 && 'Плохо'}
-              {rating === 2 && 'Ниже среднего'}
-              {rating === 3 && 'Нормально'}
-              {rating === 4 && 'Хорошо'}
-              {rating === 5 && 'Отлично'}
+              {rating === 1 && 'Poor'}
+              {rating === 2 && 'Below average'}
+              {rating === 3 && 'OK'}
+              {rating === 4 && 'Good'}
+              {rating === 5 && 'Excellent'}
             </span>
           )}
         </div>
@@ -101,13 +101,13 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
               className="text-xs"
             >
               <MessageSquare className="w-3 h-3 mr-1" />
-              Добавить комментарий
+              Add comment
             </Button>
           )}
           {rating > 0 && !showComment && (
             <Button size="sm" onClick={handleSubmit} className="text-xs">
               <Send className="w-3 h-3 mr-1" />
-              Отправить
+              Submit
             </Button>
           )}
         </div>
@@ -117,7 +117,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
         <div className="space-y-2 animate-fade-up">
           <div className="flex items-center justify-between">
             <label className="text-xs text-muted-foreground">
-              Комментарий (необязательно):
+              Comment (optional):
             </label>
             <Button
               variant="ghost"
@@ -128,7 +128,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
             </Button>
           </div>
           <Textarea
-            placeholder="Что можно улучшить в ответе?"
+            placeholder="What could be improved?"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={2}
@@ -137,7 +137,7 @@ export function AnswerRating({ answerId, onSubmit }: AnswerRatingProps) {
           <div className="flex justify-end">
             <Button size="sm" onClick={handleSubmit}>
               <Send className="w-3 h-3 mr-1" />
-              Отправить оценку
+              Submit rating
             </Button>
           </div>
         </div>

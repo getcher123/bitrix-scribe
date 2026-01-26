@@ -53,7 +53,7 @@ export function StatusPanel() {
       <div className="flex items-center justify-between">
         <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
           <Server className="w-4 h-4 text-primary" />
-          Статус системы
+          System status
         </h3>
         <Button
           variant="ghost"
@@ -62,7 +62,7 @@ export function StatusPanel() {
           disabled={isRefreshing}
         >
           <RefreshCw className={cn('w-4 h-4 mr-1', isRefreshing && 'animate-spin')} />
-          Обновить
+          Refresh
         </Button>
       </div>
 
@@ -76,12 +76,12 @@ export function StatusPanel() {
         <StatusIcon className={cn('w-8 h-8', getStatusColor(overallStatus))} />
         <div>
           <p className={cn('font-medium', getStatusColor(overallStatus))}>
-            {overallStatus === 'ok' || overallStatus === 'healthy' ? 'Сервис работает' :
-             overallStatus === 'degraded' ? 'Частичная деградация' :
-             'Сервис недоступен'}
+            {overallStatus === 'ok' || overallStatus === 'healthy' ? 'Service is healthy' :
+             overallStatus === 'degraded' ? 'Degraded' :
+             'Service unavailable'}
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Обновляется каждые 30 секунд
+            Updates every 30 seconds
           </p>
         </div>
       </div>
@@ -92,7 +92,7 @@ export function StatusPanel() {
           <div className="flex items-start gap-3">
             <XCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-destructive">Ошибка подключения</p>
+              <p className="font-medium text-destructive">Connection error</p>
               <p className="text-sm text-muted-foreground mt-1">{error}</p>
             </div>
           </div>
@@ -101,41 +101,41 @@ export function StatusPanel() {
 
       {healthStatus && (
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-muted-foreground">Компоненты</h4>
+          <h4 className="text-sm font-medium text-muted-foreground">Components</h4>
           <div className="grid gap-3">
             <InfoCard
               icon={Database}
-              title="База данных"
+              title="Database"
               lines={[
-                `OK: ${healthStatus.database?.ok ? 'да' : 'нет'}`,
-                `Dialect: ${healthStatus.database?.dialect ?? '—'}`,
-                `pgvector: ${healthStatus.database?.pgvector === null ? '—' : healthStatus.database?.pgvector ? 'да' : 'нет'}`,
-                healthStatus.database?.error ? `Ошибка: ${healthStatus.database.error}` : '',
+                `OK: ${healthStatus.database?.ok ? 'yes' : 'no'}`,
+                `Dialect: ${healthStatus.database?.dialect ?? 'n/a'}`,
+                `pgvector: ${healthStatus.database?.pgvector === null ? 'n/a' : healthStatus.database?.pgvector ? 'yes' : 'no'}`,
+                healthStatus.database?.error ? `Error: ${healthStatus.database.error}` : '',
               ]}
             />
             <InfoCard
               icon={Folder}
-              title="Индексы"
+              title="Indexes"
               lines={[
-                `chunks: ${healthStatus.indexes_present?.chunks ? 'да' : 'нет'}`,
-                `bm25: ${healthStatus.indexes_present?.bm25 ? 'да' : 'нет'}`,
+                `chunks: ${healthStatus.indexes_present?.chunks ? 'yes' : 'no'}`,
+                `bm25: ${healthStatus.indexes_present?.bm25 ? 'yes' : 'no'}`,
               ]}
             />
             <InfoCard
               icon={Cpu}
-              title="Векторный поиск"
+              title="Vector search"
               lines={[
-                `backend: ${healthStatus.vector_backend ?? '—'}`,
-                `qdrant: ${healthStatus.qdrant_url ?? '—'}`,
-                `collection: ${healthStatus.qdrant_collection ?? '—'}`,
+                `backend: ${healthStatus.vector_backend ?? 'n/a'}`,
+                `qdrant: ${healthStatus.qdrant_url ?? 'n/a'}`,
+                `collection: ${healthStatus.qdrant_collection ?? 'n/a'}`,
               ]}
             />
             <InfoCard
               icon={Cloud}
               title="LLM/Embeddings"
               lines={[
-                `openai_model: ${healthStatus.openai_model ?? '—'}`,
-                `bge_base_url_set: ${healthStatus.bge_base_url_set ? 'да' : 'нет'}`,
+                `openai_model: ${healthStatus.openai_model ?? 'n/a'}`,
+                `bge_base_url_set: ${healthStatus.bge_base_url_set ? 'yes' : 'no'}`,
               ]}
             />
           </div>

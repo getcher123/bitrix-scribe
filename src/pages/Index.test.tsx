@@ -7,7 +7,7 @@ import Index from './Index';
 vi.mock('@/contexts/AppContext', () => ({
   useApp: () => ({
     settings: { showTimings: false },
-    error: 'API недоступен',
+    error: 'API unavailable',
   }),
 }));
 
@@ -66,6 +66,6 @@ vi.mock('@/components/ui/button', () => ({
 describe('Index', () => {
   it('renders global API error banner', () => {
     render(<Index />);
-    expect(screen.getByText('Ошибка подключения к API')).toBeInTheDocument();
+    expect(screen.getByText('API connection error')).toBeInTheDocument();
   });
 });

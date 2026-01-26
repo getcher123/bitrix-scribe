@@ -48,7 +48,7 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-destructive shrink-0" />
               <div>
-                <p className="font-medium text-destructive">Ошибка подключения к API</p>
+                <p className="font-medium text-destructive">API connection error</p>
                 <p className="text-sm text-muted-foreground mt-0.5">{globalError}</p>
               </div>
             </div>
@@ -64,10 +64,10 @@ const Index = () => {
                   <Sparkles className="w-8 h-8 text-primary" />
                 </div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-                  Поиск по Bitrix документации
+                  Search the Bitrix documentation
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                  Задайте вопрос и получите ответ с точными ссылками на источники
+                  Ask a question and get an answer with precise source links
                 </p>
               </div>
             )}
@@ -101,7 +101,7 @@ const Index = () => {
                 className="mb-4 text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Новый поиск
+                New search
               </Button>
             )}
 
@@ -148,7 +148,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-6 mt-12">
         <div className="container px-4 md:px-6 text-center text-sm text-muted-foreground">
-          <p>BitrixRAG — Система поиска по документации Bitrix</p>
+          <p>BitrixRAG - Search system for Bitrix documentation</p>
         </div>
       </footer>
     </div>

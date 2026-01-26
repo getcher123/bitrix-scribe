@@ -15,8 +15,8 @@ const sections = [
   { id: 'classic', label: 'Classic', color: 'bg-blue-500/20 text-blue-400' },
   { id: 'D7', label: 'D7', color: 'bg-green-500/20 text-green-400' },
   { id: 'REST', label: 'REST', color: 'bg-purple-500/20 text-purple-400' },
-  { id: 'courses', label: 'Курсы', color: 'bg-orange-500/20 text-orange-400' },
-  { id: 'user_help', label: 'Справка', color: 'bg-pink-500/20 text-pink-400' },
+  { id: 'courses', label: 'Courses', color: 'bg-orange-500/20 text-orange-400' },
+  { id: 'user_help', label: 'Help', color: 'bg-pink-500/20 text-pink-400' },
 ];
 
 export function SearchResults({ results, activeFilters, onFilterChange }: SearchResultsProps) {
@@ -36,7 +36,7 @@ export function SearchResults({ results, activeFilters, onFilterChange }: Search
     <div className="space-y-6 animate-fade-up">
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-muted-foreground mr-2">Фильтры:</span>
+        <span className="text-sm text-muted-foreground mr-2">Filters:</span>
         {sections.map(section => (
           <button
             key={section.id}
@@ -57,16 +57,16 @@ export function SearchResults({ results, activeFilters, onFilterChange }: Search
             onClick={() => onFilterChange([])}
             className="text-xs text-muted-foreground hover:text-foreground ml-2"
           >
-            Сбросить
+            Reset
           </button>
         )}
       </div>
 
       {/* Results count */}
       <div className="text-sm text-muted-foreground">
-        Найдено: <span className="text-foreground font-medium">{filteredResults.length}</span> документов
+        Found: <span className="text-foreground font-medium">{filteredResults.length}</span> documents
         {activeFilters.length > 0 && (
-          <span className="text-muted-foreground"> (из {results.length})</span>
+          <span className="text-muted-foreground"> (of {results.length})</span>
         )}
       </div>
 
@@ -84,7 +84,7 @@ export function SearchResults({ results, activeFilters, onFilterChange }: Search
       {filteredResults.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>Документы не найдены</p>
+          <p>No documents found</p>
         </div>
       )}
     </div>
@@ -96,7 +96,7 @@ function ResultCard({ result, index }: { result: SearchResult; index: number }) 
 
   const handleOpen = () => {
     navigator.clipboard.writeText(result.path);
-    toast({ title: 'Путь скопирован', description: result.path, duration: 2000 });
+    toast({ title: 'Path copied', description: result.path, duration: 2000 });
   };
 
   return (
@@ -132,7 +132,7 @@ function ResultCard({ result, index }: { result: SearchResult; index: number }) 
           {(result.module || result.section) && (
             <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
               {result.module && <span className="font-mono">{result.module}</span>}
-              {result.section && <span>·</span>}
+              {result.section && <span>-</span>}
               {result.section && <span>{result.section}</span>}
             </div>
           )}

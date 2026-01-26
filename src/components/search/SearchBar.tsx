@@ -48,7 +48,7 @@ export function SearchBar({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Задайте вопрос по Bitrix документации..."
+            placeholder="Ask a question about Bitrix documentation..."
             className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base"
             disabled={isLoading}
           />
@@ -67,7 +67,7 @@ export function SearchBar({
               </>
             ) : (
               <>
-                <span>Ответить</span>
+                <span>Answer</span>
               </>
             )}
           </Button>
@@ -77,10 +77,10 @@ export function SearchBar({
       {/* Mode selector */}
       <div className="flex flex-wrap items-center gap-2 text-xs">
         {[
-          { id: 'auto', label: 'Авто' },
+          { id: 'auto', label: 'Auto' },
           { id: 'llm', label: 'LLM' },
           { id: 'extractive', label: 'Extractive' },
-          { id: 'search', label: 'Только поиск' },
+          { id: 'search', label: 'Search only' },
         ].map((option) => (
           <button
             key={option.id}
@@ -101,7 +101,7 @@ export function SearchBar({
       {isLoading && (
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground animate-fade-in">
           <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-          <span>Поиск в документации...</span>
+          <span>Searching documentation...</span>
           <span className="font-mono text-primary">{(elapsedTime / 1000).toFixed(1)}s</span>
         </div>
       )}

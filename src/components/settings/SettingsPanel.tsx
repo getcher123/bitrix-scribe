@@ -24,7 +24,7 @@ export function SettingsPanel() {
   const handleSave = () => {
     updateSettings(localSettings);
     setHasChanges(false);
-    toast({ title: 'Настройки сохранены', duration: 2000 });
+    toast({ title: 'Settings saved', duration: 2000 });
   };
 
   const handleReset = () => {
@@ -38,16 +38,16 @@ export function SettingsPanel() {
       <div className="flex items-center justify-between">
         <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
           <Settings className="w-4 h-4 text-primary" />
-          Настройки
+          Settings
         </h3>
         {hasChanges && (
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={handleReset}>
-              Отмена
+              Cancel
             </Button>
             <Button variant="default" size="sm" onClick={handleSave}>
               <Save className="w-4 h-4 mr-1" />
-              Сохранить
+              Save
             </Button>
           </div>
         )}
@@ -72,7 +72,7 @@ export function SettingsPanel() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm text-foreground">Таймаут (мс)</label>
+            <label className="text-sm text-foreground">Timeout (ms)</label>
             <Input
               type="number"
               value={localSettings.timeout}
@@ -89,11 +89,11 @@ export function SettingsPanel() {
       <div className="space-y-4">
         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
           <Link className="w-4 h-4" />
-          Ссылки на источники
+          Source links
         </h4>
 
         <div className="space-y-2">
-          <label className="text-sm text-foreground">Префикс URL для ссылок</label>
+          <label className="text-sm text-foreground">URL prefix for source links</label>
           <Input
             value={localSettings.sourceUrlPrefix}
             onChange={(e) => handleChange('sourceUrlPrefix', e.target.value)}
@@ -101,7 +101,7 @@ export function SettingsPanel() {
             className="font-mono text-sm"
           />
           <p className="text-xs text-muted-foreground">
-            Добавляется перед путём к файлу при открытии ссылки
+            Added before the file path when opening a link
           </p>
         </div>
       </div>
@@ -110,14 +110,14 @@ export function SettingsPanel() {
       <div className="space-y-4">
         <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
           <Timer className="w-4 h-4" />
-          Отображение
+          Display
         </h4>
 
         <div className="space-y-3">
           <div className="space-y-2">
             <label className="text-sm text-foreground flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-primary" />
-              Режим по умолчанию
+              Default mode
             </label>
             <select
               value={localSettings.defaultMode}
@@ -127,22 +127,22 @@ export function SettingsPanel() {
               <option value="auto">Auto</option>
               <option value="llm">LLM</option>
               <option value="extractive">Extractive</option>
-              <option value="search">Только поиск</option>
+              <option value="search">Search only</option>
             </select>
           </div>
 
           <ToggleOption
             icon={Clock}
-            label="Показывать тайминги"
-            description="Время выполнения запросов"
+            label="Show timings"
+            description="Request duration"
             checked={localSettings.showTimings}
             onChange={(checked) => handleChange('showTimings', checked)}
           />
 
           <ToggleOption
             icon={Bug}
-            label="Режим отладки"
-            description="Дополнительная информация"
+            label="Debug mode"
+            description="Additional information"
             checked={localSettings.showDebug}
             onChange={(checked) => handleChange('showDebug', checked)}
           />
@@ -152,7 +152,7 @@ export function SettingsPanel() {
       {/* Info */}
       <div className="pt-4 border-t border-border">
         <p className="text-xs text-muted-foreground">
-          Настройки сохраняются локально в браузере.
+          Settings are stored locally in your browser.
         </p>
       </div>
     </div>

@@ -1,104 +1,100 @@
 # Bitrix Docs Search
 
-Интеллектуальный поиск по документации Bitrix с AI-генерацией ответов.
+AI-powered search for Bitrix documentation with answer generation.
 
-## 🚀 Возможности
+## Features
 
-- **Режимы ответа** — auto/LLM/extractive/только поиск
-- **История запросов** — сохранение и повторное использование поисков
-- **Оценка ответов** — рейтинг из 5 звёзд с комментариями
-- **Настраиваемый API** — гибкая настройка эндпоинтов
-- **Источники** — прямые ссылки на документацию с настраиваемым префиксом
+- **Answer modes** - auto/LLM/extractive/search-only
+- **Query history** - save and reuse previous searches
+- **Answer rating** - 5-star rating with optional comments
+- **Configurable API** - flexible endpoint settings
+- **Sources** - direct links to documentation with a configurable prefix
 
-## 🛠 Технологии
+## Tech Stack
 
 - **React 18** + **TypeScript**
-- **Vite** — быстрая сборка
-- **Tailwind CSS** — стилизация
-- **shadcn/ui** — UI компоненты
-- **TanStack Query** — управление серверным состоянием
+- **Vite** - fast builds
+- **Tailwind CSS** - styling
+- **shadcn/ui** - UI components
+- **TanStack Query** - server state management
 
-## 📦 Установка
+## Installation
 
 ```bash
-# Клонировать репозиторий
+# Clone repository
 git clone <repository-url>
 
-# Установить зависимости
+# Install dependencies
 npm install
 
-# Запустить dev сервер
+# Start dev server
 npm run dev
 ```
 
-## ⚙️ Настройка
+## Settings
 
-В панели настроек доступны:
+The settings panel includes:
 
-| Параметр | Описание | По умолчанию |
-|----------|----------|--------------|
-| API URL | Базовый адрес API | `http://localhost:8000` |
-| Таймаут | Время ожидания запроса | `30000ms` |
-| Режим по умолчанию | auto / llm / extractive / search | `auto` |
-| Показывать тайминги | Время выполнения запроса | `true` |
-| Префикс источников | Префикс для ссылок на источники | GitHub URL |
+| Parameter | Description | Default |
+|----------|-------------|---------|
+| API URL | Base API URL | `http://localhost:8000` |
+| Timeout | Request timeout | `30000ms` |
+| Default mode | auto / llm / extractive / search | `auto` |
+| Show timings | Request timing info | `true` |
+| Source prefix | Link prefix for sources | GitHub URL |
 
-## 🔗 API Endpoints
+## API Endpoints
 
-Приложение использует следующие эндпоинты:
+The app uses the following endpoints:
 
-- `POST /answer` — получение ответа на запрос
-- `POST /search` — поиск по документации
-- `GET /health` — статус сервисов
-- `GET /history` — история запросов
+- `POST /answer` - get an answer
+- `POST /search` - search the docs
+- `GET /health` - service status
+- `GET /history` - query history
 
-## 📁 Структура проекта
+## Project Structure
 
 ```
 src/
-├── components/
-│   ├── search/        # Компоненты поиска
-│   ├── settings/      # Настройки
-│   ├── status/        # Статус сервисов
-│   └── ui/            # UI компоненты (shadcn)
-├── contexts/          # React контексты
-├── hooks/             # Кастомные хуки
-├── pages/             # Страницы
-├── services/          # API сервисы
-└── types/             # TypeScript типы
+|-- components/        # Search, settings, status, UI components
+|-- contexts/          # React contexts
+|-- hooks/             # Custom hooks
+|-- pages/             # Pages
+|-- services/          # API services
+`-- types/             # TypeScript types
 ```
 
-## 🎨 Особенности интерфейса
+## UI Features
 
-- **Тёмная/светлая тема** — автоматическое определение
-- **Адаптивный дизайн** — работа на мобильных устройствах
-- **Анимации** — плавные переходы и состояния
+- **Dark/Light theme** - automatic detection
+- **Responsive layout** - works on mobile devices
+- **Animations** - smooth transitions and states
 
-## 📊 Оценка ответов
+## Answer Rating
 
-Пользователи могут оценить каждый ответ:
-- Рейтинг от 1 до 5 звёзд
-- Опциональный комментарий для низких оценок
-- Данные сохраняются локально
+Users can rate each answer:
+- Rating from 1 to 5 stars
+- Optional comment for low ratings
+- Data stored locally
 
-## 🔧 Скрипты
+## Scripts
 
 ```bash
-npm run dev      # Запуск dev сервера
-npm run build    # Сборка для продакшена
-npm run preview  # Просмотр сборки
-npm run lint     # Проверка кода
-npm run test     # Unit тесты (Vitest)
-npm run test:e2e # E2E тесты (Playwright)
-npm run gen:api  # Генерация типов из openapi.yaml
+npm run dev      # Start dev server
+npm run build    # Production build
+npm run preview  # Preview build
+npm run lint     # Lint
+npm run test     # Unit tests (Vitest)
+npm run test:e2e # E2E tests (Playwright)
+npm run gen:api  # Generate types from openapi.yaml
 ```
 
-Перед первым запуском e2e:
+Before running e2e tests for the first time:
 
 ```bash
 npx playwright install
 ```
 
-## 📄 Лицензия
+## License
 
 MIT

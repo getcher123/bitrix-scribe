@@ -16,7 +16,7 @@ export function HistoryPanel({ onSelect }: HistoryPanelProps) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         <Clock className="w-10 h-10 mx-auto mb-3 opacity-50" />
-        <p className="text-sm">История запросов пуста</p>
+        <p className="text-sm">No queries yet</p>
       </div>
     );
   }
@@ -26,11 +26,11 @@ export function HistoryPanel({ onSelect }: HistoryPanelProps) {
       <div className="flex items-center justify-between">
         <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
           <Clock className="w-4 h-4 text-primary" />
-          История запросов
+          Query history
         </h3>
         <Button variant="ghost" size="sm" onClick={() => refreshHistory()} className="text-xs text-muted-foreground">
           <RefreshCw className="w-3 h-3 mr-1" />
-          Обновить
+          Refresh
         </Button>
       </div>
 
@@ -62,9 +62,9 @@ function HistoryCard({
     const now = new Date();
     const diff = now.getTime() - date.getTime();
 
-    if (diff < 60000) return 'Только что';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} мин назад`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)} ч назад`;
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)} h ago`;
     return date.toLocaleDateString('ru-RU');
   };
 
@@ -83,10 +83,10 @@ function HistoryCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-foreground truncate">{item.query || '—'}</p>
+        <p className="text-sm text-foreground truncate">{item.query || 'n/a'}</p>
         <div className="flex items-center gap-2 mt-1">
           <span className="text-xs text-muted-foreground">
-            {item.created_at ? formatTime(Date.parse(item.created_at)) : '—'}
+            {item.created_at ? formatTime(Date.parse(item.created_at)) : 'n/a'}
           </span>
         </div>
       </div>
